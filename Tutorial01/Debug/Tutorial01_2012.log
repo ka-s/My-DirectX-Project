@@ -1,0 +1,18 @@
+﻿2014/09/27 9:21:33 にビルドを開始しました。
+     1>ノード 3 上のプロジェクト "C:\Users\ka-s\Documents\Visual Studio 2013\Projects\Direct3D Tutorial Wi1\Tutorial01\Tutorial01_2012.vcxproj" (Build ターゲット)。
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oi /Oy- /D WIN32 /D _DEBUG /D DEBUG /D PROFILE /D _WINDOWS /D _WIN32_WINNT=0x0600 /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /arch:SSE2 /fp:fast /Zc:wchar_t /Zc:forScope /openmp- /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt  Tutorial01.cpp
+         Tutorial01.cpp
+       ResourceCompile:
+         C:\Program Files (x86)\Windows Kits\8.1\bin\x86\rc.exe /D _UNICODE /D UNICODE /l"0x0409" /nologo /fo"Debug\Tutorial01.res" Tutorial01.rc 
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\ka-s\Documents\Visual Studio 2013\Projects\Direct3D Tutorial Wi1\Debug\Tutorial01.exe" /INCREMENTAL /NOLOGO d3d11.lib d3dcompiler.lib dxguid.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /manifestinput:"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\Include\Manifest\dpiaware.manifest" /DEBUG /PDB:"C:\Users\ka-s\Documents\Visual Studio 2013\Projects\Direct3D Tutorial Wi1\Debug\Tutorial01.pdb" /SUBSYSTEM:WINDOWS /LARGEADDRESSAWARE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\ka-s\Documents\Visual Studio 2013\Projects\Direct3D Tutorial Wi1\Debug\Tutorial01.lib" /MACHINE:X86 /SAFESEH  Debug\Tutorial01.res
+         Debug\Tutorial01.obj
+         LINK : 前回のインクリメンタル リンクで C:\Users\ka-s\Documents\Visual Studio 2013\Projects\Direct3D Tutorial Wi1\Debug\Tutorial01.exe が見つからなかったか、ビルドされませんでした。フル リンクを行います。
+     1>Tutorial01.obj : warning LNK4075: /EDITANDCONTINUE は /SAFESEH の指定によって無視されます。
+         Tutorial01_2012.vcxproj -> C:\Users\ka-s\Documents\Visual Studio 2013\Projects\Direct3D Tutorial Wi1\Debug\Tutorial01.exe
+     1>プロジェクト "C:\Users\ka-s\Documents\Visual Studio 2013\Projects\Direct3D Tutorial Wi1\Tutorial01\Tutorial01_2012.vcxproj" (Build ターゲット) のビルドが完了しました。
+
+ビルドに成功しました。
+
+経過時間 00:00:07.54
