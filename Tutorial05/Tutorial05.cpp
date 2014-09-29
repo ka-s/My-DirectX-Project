@@ -65,7 +65,8 @@ XMMATRIX                g_World1;
 XMMATRIX                g_World2;
 XMMATRIX                g_View;
 XMMATRIX                g_Projection;
-float                    OrbitAngle = 0;
+float                   g_orbita_angle = 0;
+bool                    g_orbita_direction = true;
 
 
 //--------------------------------------------------------------------------------------
@@ -556,11 +557,11 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
     case WM_KEYDOWN:
         // 右キーが押された時
         if (wParam == VK_RIGHT){
-            OrbitAngle += -0.2f;
+            g_orbita_direction = true;
         }
         // 左キーが押された時
         if (wParam == VK_LEFT){
-            OrbitAngle += 0.2f;
+            g_orbita_direction = false;
         }
         break;
 
@@ -604,6 +605,14 @@ void Render()
         t = (timeCur - timeStart) / 1000.0f;
     }
 
+    // カメラが回る方向
+    if (g_orbita_direction){
+        g_orbita_angle += -0.002f;
+    }
+    else{
+        g_orbita_angle += 0.002f;
+    }
+
     // 第2キューブ : 第1キューブの周りを公転
     XMMATRIX mSpin = XMMatrixRotationZ( -t * 10.0f);
     XMMATRIX mOrbit = XMMatrixRotationY(t * 1.0f);
@@ -612,7 +621,7 @@ void Render()
     g_World2 = mScale * mTranslate * mOrbit;
 
     // カメラ : 第1キューブの周りをキー入力に応じて公転
-    XMMATRIX mCameraOrbit = XMMatrixRotationY(OrbitAngle);
+    XMMATRIX mCameraOrbit = XMMatrixRotationY(g_orbita_angle);
     XMMATRIX mCameraTranslate = XMMatrixTranslation(-10.0f, 0.0f, 0.0f);
     mCamera = mCameraTranslate * mCameraOrbit;
 
@@ -661,7 +670,7 @@ void Render()
     //
     // 第2キューブを描画
     //
-    g_pImmediateContext->DrawIndexed( 36, 0, 0 );
+    //g_pImmediateContext->DrawIndexed( 36, 0, 0 );
 
     //
     // Present our back buffer to our front buffer
