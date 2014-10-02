@@ -1,5 +1,5 @@
-﻿2014/09/29 9:56:55 にビルドを開始しました。
-     1>ノード 2 上のプロジェクト "C:\Users\かーず\Documents\Visual Studio 2013\Projects\My-DirectX-Project\Tutorial05\Tutorial05_2012.vcxproj" (Build ターゲット)。
+﻿2014/10/02 17:17:22 にビルドを開始しました。
+     1>ノード 5 上のプロジェクト "C:\Users\かーず\Documents\Visual Studio 2013\Projects\My-DirectX-Project\Tutorial05\Tutorial05_2012.vcxproj" (Build ターゲット)。
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oi /Oy- /D WIN32 /D _DEBUG /D DEBUG /D PROFILE /D _WINDOWS /D _WIN32_WINNT=0x0600 /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /arch:SSE2 /fp:fast /Zc:wchar_t /Zc:forScope /openmp- /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt  Tutorial05.cpp
          Tutorial05.cpp
@@ -11,4 +11,4 @@
 
 ビルドに成功しました。
 
-経過時間 00:00:01.58
+経過時間 00:00:01.65

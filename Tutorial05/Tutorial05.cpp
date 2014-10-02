@@ -67,6 +67,7 @@ XMMATRIX                g_View;
 XMMATRIX                g_Projection;
 float                   g_orbita_angle = 0;
 bool                    g_orbita_direction = true;
+POINT                   g_point;
 
 
 //--------------------------------------------------------------------------------------
@@ -578,6 +579,9 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
 
+    // マウスの座標取得    
+    GetCursorPos(&g_point);
+
     return 0;
 }
 
@@ -607,11 +611,15 @@ void Render()
 
     // カメラが回る方向
     if (g_orbita_direction){
-        g_orbita_angle += -0.002f;
+        g_orbita_angle += -0.0002f;
     }
     else{
-        g_orbita_angle += 0.002f;
+        g_orbita_angle += 0.0002f;
     }
+
+    // 第1キューブ : 拡大
+    XMMATRIX mScale1 = XMMatrixScaling(3.0f, 3.0f, 3.0f);
+    g_World1 = mScale1;
 
     // 第2キューブ : 第1キューブの周りを公転
     XMMATRIX mSpin = XMMatrixRotationZ( -t * 10.0f);
@@ -622,7 +630,7 @@ void Render()
 
     // カメラ : 第1キューブの周りをキー入力に応じて公転
     XMMATRIX mCameraOrbit = XMMatrixRotationY(g_orbita_angle);
-    XMMATRIX mCameraTranslate = XMMatrixTranslation(-10.0f, 0.0f, 0.0f);
+    XMMATRIX mCameraTranslate = XMMatrixTranslation(20.0f, 0.0f, 0.0f);
     mCamera = mCameraTranslate * mCameraOrbit;
 
     // ビュー行列を計算
