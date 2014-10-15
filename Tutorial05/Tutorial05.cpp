@@ -65,8 +65,19 @@ XMMATRIX                g_World1;
 XMMATRIX                g_World2;
 XMMATRIX                g_View;
 XMMATRIX                g_Projection;
+
 float                   g_orbita_angle = 0;
 bool                    g_orbita_direction = true;
+bool                    g_input_Right = false;
+bool                    g_input_Left = false;
+bool                    g_input_Up = false;
+bool                    g_input_Down = false;
+
+// 定数
+const XMVECTOR          g_vRight = XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f);
+const XMVECTOR          g_vLeft = XMVectorSet(-1.0f, 0.0f, 0.0f, 1.0f);
+const XMVECTOR          g_vForward = XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
+const XMVECTOR          g_vBackward = XMVectorSet(0.0f, 0.0f, 1.0f, 1.0f);
 
 
 //--------------------------------------------------------------------------------------
@@ -557,11 +568,38 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
     case WM_KEYDOWN:
         // 右キーが押された時
         if (wParam == VK_RIGHT){
-            g_orbita_direction = true;
+            g_input_Right = true;
         }
         // 左キーが押された時
         if (wParam == VK_LEFT){
-            g_orbita_direction = false;
+            g_input_Left = true;
+        }
+        // 上キーが押された時
+        if (wParam == VK_UP){
+            g_input_Up = true;
+        }
+        // 下キーが押された時
+        if (wParam == VK_DOWN){
+            g_input_Down = true;
+        }
+        break;
+    // キーが離されたとき
+    case WM_KEYUP:
+        // 右キーが押された時
+        if (wParam == VK_RIGHT){
+            g_input_Right = false;
+        }
+        // 左キーが押された時
+        if (wParam == VK_LEFT){
+            g_input_Left = false;
+        }
+        // 上キーが押された時
+        if (wParam == VK_UP){
+            g_input_Up = false;
+        }
+        // 下キーが押された時
+        if (wParam == VK_DOWN){
+            g_input_Down = false;
         }
         break;
 
@@ -612,6 +650,14 @@ void Render()
     else{
         g_orbita_angle += 0.002f;
     }
+
+    // ---------- 移動計算 ----------
+    XMVECTOR walk_direction =
+        g_input_Left        * g_vLeft
+        + g_input_Right     * g_vRight
+        + g_input_Up        * g_vForward
+        + g_input_Down      * g_vBackward;
+    // ------------------------------
 
     // 第2キューブ : 第1キューブの周りを公転
     XMMATRIX mSpin = XMMatrixRotationZ( -t * 10.0f);
@@ -677,3 +723,27 @@ void Render()
     //
     g_pSwapChain->Present( 0, 0 );
 }
+
+//void Player::Move(){
+//    // 移動計算
+//    Vec3 walkDirection =
+//        Input::KeyA.pressed * Vec3::Left
+//        + Input::KeyD.pressed * Vec3::Right
+//        + Input::KeyW.pressed * Vec3::Forward
+//        + Input::KeyS.pressed * Vec3::Backward;
+//    // 回転計算
+//    double deltaX = WINDOW_WIDTH / 2 - Mouse::Pos().x;
+//    double deltaY = WINDOW_HEIGHT / 2 - Mouse::Pos().y;
+//    player.angleHorizon += deltaX * 0.5;
+//    player.angleVertical += deltaY * 0.5;
+//    if (player.angleVertical > 90) player.angleVertical = 90;
+//    if (player.angleVertical < -90) player.angleVertical = -90;
+//    player.quaternion = Quaternion::RollPitchYaw(0, -Radians(player.angleVertical), -Radians(player.angleHorizon));
+//    Window::SetCursorPos(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+//    // 座標計算
+//    Vec3 ExclusionY = { 1, 0, 1 };
+//    player.pos += player.quaternion * walkDirection * 4.0 * ExclusionY;
+//    // 視点計算
+//    Vec3 direction = player.quaternion * Vec3::Forward;
+//    player.target = player.pos + direction * 10;
+//}
