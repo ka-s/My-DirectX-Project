@@ -67,6 +67,8 @@ XMMATRIX                g_View;
 XMMATRIX                g_Projection;
 
 float                   g_orbita_angle = 0;
+float                   g_angleHorizon = 0;
+float                    g_angleVertical = 0;
 bool                    g_orbita_direction = true;
 bool                    g_input_Right = false;
 bool                    g_input_Left = false;
@@ -74,10 +76,12 @@ bool                    g_input_Up = false;
 bool                    g_input_Down = false;
 
 // 定数
-const XMVECTOR          g_vRight = XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f);
-const XMVECTOR          g_vLeft = XMVectorSet(-1.0f, 0.0f, 0.0f, 1.0f);
-const XMVECTOR          g_vForward = XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
-const XMVECTOR          g_vBackward = XMVectorSet(0.0f, 0.0f, 1.0f, 1.0f);
+const int               WINDOW_WIDTH = 640;
+const int                WINDOW_HEIGHT = 480;
+const XMMATRIX          g_vRight = XMMatrixTranslation(1.0f, 0.0f, 0.0f);
+const XMMATRIX          g_vLeft = XMMatrixTranslation(-1.0f, 0.0f, 0.0f);
+const XMMATRIX          g_vForward = XMMatrixTranslation(0.0f, 0.0f, -1.0f);
+const XMMATRIX          g_vBackward = XMMatrixTranslation(0.0f, 0.0f, 1.0f);
 
 
 //--------------------------------------------------------------------------------------
@@ -153,7 +157,7 @@ HRESULT InitWindow( HINSTANCE hInstance, int nCmdShow )
 
     // Create window
     g_hInst = hInstance;
-    RECT rc = { 0, 0, 800, 600 };
+    RECT rc = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
     AdjustWindowRect( &rc, WS_OVERLAPPEDWINDOW, FALSE );
     g_hWnd = CreateWindow( L"TutorialWindowClass", L"mikakunin", WS_OVERLAPPEDWINDOW,    
                            CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance,
@@ -627,6 +631,13 @@ void Render()
 {
     // カメラの位置の行列
     XMMATRIX mCamera;
+    // カメラの変数
+    static XMVECTOR vEye = XMVectorSet(0.0f, 1.0f, -10.0f, 1.0f);
+    static XMVECTOR vAt = XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
+    static XMVECTOR vUp = XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
+    static XMVECTOR vQuat = XMQuaternionIdentity();
+    static XMMATRIX mEye = XMMatrixIdentity();
+    static XMMATRIX mAt = XMMatrixIdentity();
 
     // 経過時間
     static float t = 0.0f;
@@ -652,11 +663,32 @@ void Render()
     }
 
     // ---------- 移動計算 ----------
-    XMVECTOR walk_direction =
+    // ■移動方向計算
+    XMMATRIX walk_direction =
         g_input_Left        * g_vLeft
         + g_input_Right     * g_vRight
         + g_input_Up        * g_vForward
         + g_input_Down      * g_vBackward;
+    //// ■回転計算
+    //// マウスの移動量取得
+    //double deltaX = WINDOW_WIDTH / 2 - Mouse::Pos().x;
+    //double deltaY = WINDOW_HEIGHT / 2 - Mouse::Pos().y;
+    //// deltaXYの大きさを調整
+    //g_angleHorizon += deltaX * 0.5;
+    //g_angleVertical += deltaY * 0.5;
+    //// カメラアングルが90度を超えないよう制御
+    //if (player.angleVertical > 90) player.angleVertical = 90;
+    //if (player.angleVertical < -90) player.angleVertical = -90;
+    //// クォータニオンを計算
+    vQuat = XMQuaternionRotationRollPitchYaw(0.0f, 0.0f, 0.0f);
+    //// カーソルの位置を中心に戻す
+    //Window::SetCursorPos(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+    // ■座標計算
+    XMMATRIX ExclusionY = XMMatrixTranslation(1.0f, 0.0f, 1.0f);
+    mEye += XMMatrixRotationRollPitchYawFromVector(vQuat) * walk_direction * 4.0f * ExclusionY;
+    // ■視点計算
+    XMMATRIX direction = XMMatrixRotationRollPitchYawFromVector(vQuat) * g_vForward;
+    mAt = mEye + direction * 10.0f;
     // ------------------------------
 
     // 第2キューブ : 第1キューブの周りを公転
@@ -672,10 +704,10 @@ void Render()
     mCamera = mCameraTranslate * mCameraOrbit;
 
     // ビュー行列を計算
-    XMVECTOR Eye = XMVector2Transform(XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f), mCamera);
-    XMVECTOR At = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-    XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-    g_View = XMMatrixLookAtLH(Eye, At, Up);
+    XMVECTOR Eye = XMVector2Transform(vEye, mEye);
+    XMVECTOR At = XMVector2Transform(vAt, mAt);
+    //XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+    g_View = XMMatrixLookAtLH(Eye, At, vUp);
 
     //
     // Clear the back buffer
