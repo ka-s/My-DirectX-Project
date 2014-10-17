@@ -1,8 +1,12 @@
-﻿2014/10/16 18:01:07 にビルドを開始しました。
-     1>ノード 5 上のプロジェクト "C:\Users\かーず\Documents\Visual Studio 2013\Projects\My-DirectX-Project\Tutorial05\Tutorial05_2012.vcxproj" (Build ターゲット)。
+﻿2014/10/17 15:53:49 にビルドを開始しました。
+     1>ノード 2 上のプロジェクト "C:\Users\かーず\Documents\Visual Studio 2013\Projects\My-DirectX-Project\Tutorial05\Tutorial05_2012.vcxproj" (Build ターゲット)。
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W4 /WX- /Od /Oi /Oy- /D WIN32 /D _DEBUG /D DEBUG /D PROFILE /D _WINDOWS /D _WIN32_WINNT=0x0600 /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /arch:SSE2 /fp:fast /Zc:wchar_t /Zc:forScope /openmp- /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt  Tutorial05.cpp
          Tutorial05.cpp
+     1>c:\users\かーず\documents\visual studio 2013\projects\my-directx-project\tutorial05\tutorial05.cpp(101): warning C4244: 'return' : 'double' から 'float' への変換です。データが失われる可能性があります。
+     1>c:\users\かーず\documents\visual studio 2013\projects\my-directx-project\tutorial05\tutorial05.cpp(678): warning C4244: '引数' : 'int' から 'float' への変換です。データが失われる可能性があります。
+     1>c:\users\かーず\documents\visual studio 2013\projects\my-directx-project\tutorial05\tutorial05.cpp(679): warning C4244: '引数' : 'int' から 'float' への変換です。データが失われる可能性があります。
+     1>c:\users\かーず\documents\visual studio 2013\projects\my-directx-project\tutorial05\tutorial05.cpp(680): warning C4244: '引数' : 'int' から 'float' への変換です。データが失われる可能性があります。
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\かーず\Documents\Visual Studio 2013\Projects\My-DirectX-Project\Debug\Tutorial05.exe" /INCREMENTAL /NOLOGO d3d11.lib d3dcompiler.lib dxguid.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /manifestinput:"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\Include\Manifest\dpiaware.manifest" /DEBUG /PDB:"C:\Users\かーず\Documents\Visual Studio 2013\Projects\My-DirectX-Project\Debug\Tutorial05.pdb" /SUBSYSTEM:WINDOWS /LARGEADDRESSAWARE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\かーず\Documents\Visual Studio 2013\Projects\My-DirectX-Project\Debug\Tutorial05.lib" /MACHINE:X86 /SAFESEH  Debug\Tutorial05.res
          Debug\Tutorial05.obj
@@ -11,4 +15,4 @@
 
 ビルドに成功しました。
 
-経過時間 00:00:02.06
+経過時間 00:00:01.31

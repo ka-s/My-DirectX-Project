@@ -70,18 +70,22 @@ float                   g_orbita_angle = 0;
 float                   g_angleHorizon = 0;
 float                    g_angleVertical = 0;
 bool                    g_orbita_direction = true;
-bool                    g_input_Right = false;
-bool                    g_input_Left = false;
-bool                    g_input_Up = false;
-bool                    g_input_Down = false;
+int                    g_input_Right = 0;
+int                    g_input_Left = 0;
+int                    g_input_Up = 0;
+int                    g_input_Down = 0;
 
 // 定数
 const int               WINDOW_WIDTH = 640;
 const int                WINDOW_HEIGHT = 480;
-const XMMATRIX          g_vRight = XMMatrixTranslation(1.0f, 0.0f, 0.0f);
-const XMMATRIX          g_vLeft = XMMatrixTranslation(-1.0f, 0.0f, 0.0f);
-const XMMATRIX          g_vForward = XMMatrixTranslation(0.0f, 0.0f, -1.0f);
-const XMMATRIX          g_vBackward = XMMatrixTranslation(0.0f, 0.0f, 1.0f);
+const XMVECTOR          g_vRight = XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f);
+const XMVECTOR          g_vLeft = XMVectorSet(-1.0f, 0.0f, 0.0f, 1.0f);
+const XMVECTOR          g_vForward = XMVectorSet(0.0f, 0.0f, 1.0f, 1.0f);
+const XMVECTOR          g_vBackward = XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
+const XMMATRIX          g_mRight = XMMatrixTranslation(1.0f, 0.0f, 0.0f);
+const XMMATRIX          g_mLeft = XMMatrixTranslation(-1.0f, 0.0f, 0.0f);
+const XMMATRIX          g_mForward = XMMatrixTranslation(0.0f, 0.0f, -1.0f);
+const XMMATRIX          g_mBackward = XMMatrixTranslation(0.0f, 0.0f, 1.0f);
 
 
 //--------------------------------------------------------------------------------------
@@ -92,6 +96,10 @@ HRESULT InitDevice();
 void CleanupDevice();
 LRESULT CALLBACK    WndProc( HWND, UINT, WPARAM, LPARAM );
 void Render();
+
+float Radians(float angle){
+    return angle * 3.14 / 180;
+}
 
 
 //--------------------------------------------------------------------------------------
@@ -521,7 +529,7 @@ HRESULT InitDevice()
     g_World2 = XMMatrixIdentity();
 
     // Initialize the view matrix
-    XMVECTOR Eye = XMVectorSet( 0.0f, 1.0f, -10.0f, 0.0f );    
+    XMVECTOR Eye = XMVectorSet( 0.0f, 1.0f, -10.0f, 0.0f );
     XMVECTOR At = XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
     XMVECTOR Up = XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
     g_View = XMMatrixLookAtLH( Eye, At, Up );
@@ -572,38 +580,38 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
     case WM_KEYDOWN:
         // 右キーが押された時
         if (wParam == VK_RIGHT){
-            g_input_Right = true;
+            g_input_Right = 1;
         }
         // 左キーが押された時
         if (wParam == VK_LEFT){
-            g_input_Left = true;
+            g_input_Left = 1;
         }
         // 上キーが押された時
         if (wParam == VK_UP){
-            g_input_Up = true;
+            g_input_Up = 1;
         }
         // 下キーが押された時
         if (wParam == VK_DOWN){
-            g_input_Down = true;
+            g_input_Down = 1;
         }
         break;
     // キーが離されたとき
     case WM_KEYUP:
         // 右キーが押された時
         if (wParam == VK_RIGHT){
-            g_input_Right = false;
+            g_input_Right = 0;
         }
         // 左キーが押された時
         if (wParam == VK_LEFT){
-            g_input_Left = false;
+            g_input_Left = 0;
         }
         // 上キーが押された時
         if (wParam == VK_UP){
-            g_input_Up = false;
+            g_input_Up = 0;
         }
         // 下キーが押された時
         if (wParam == VK_DOWN){
-            g_input_Down = false;
+            g_input_Down = 0;
         }
         break;
 
@@ -633,11 +641,12 @@ void Render()
     XMMATRIX mCamera;
     // カメラの変数
     static XMVECTOR vEye = XMVectorSet(0.0f, 1.0f, -10.0f, 1.0f);
-    static XMVECTOR vAt = XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
+    static XMVECTOR vAt = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
     static XMVECTOR vUp = XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
     static XMVECTOR vQuat = XMQuaternionIdentity();
-    static XMMATRIX mEye = XMMatrixIdentity();
-    static XMMATRIX mAt = XMMatrixIdentity();
+    //static XMMATRIX mEye = XMMatrixIdentity();
+    //static XMMATRIX mAt = XMMatrixIdentity();
+    static float testValue = 0;
 
     // 経過時間
     static float t = 0.0f;
@@ -664,33 +673,37 @@ void Render()
 
     // ---------- 移動計算 ----------
     // ■移動方向計算
-    XMMATRIX walk_direction =
+    XMVECTOR walk_direction = 
         g_input_Left        * g_vLeft
         + g_input_Right     * g_vRight
         + g_input_Up        * g_vForward
         + g_input_Down      * g_vBackward;
-    //// ■回転計算
-    //// マウスの移動量取得
-    //double deltaX = WINDOW_WIDTH / 2 - Mouse::Pos().x;
-    //double deltaY = WINDOW_HEIGHT / 2 - Mouse::Pos().y;
-    //// deltaXYの大きさを調整
-    //g_angleHorizon += deltaX * 0.5;
-    //g_angleVertical += deltaY * 0.5;
-    //// カメラアングルが90度を超えないよう制御
-    //if (player.angleVertical > 90) player.angleVertical = 90;
-    //if (player.angleVertical < -90) player.angleVertical = -90;
-    //// クォータニオンを計算
-    vQuat = XMQuaternionRotationRollPitchYaw(0.0f, 0.0f, 0.0f);
-    //// カーソルの位置を中心に戻す
-    //Window::SetCursorPos(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-    // ■座標計算
-    XMMATRIX ExclusionY = XMMatrixTranslation(1.0f, 0.0f, 1.0f);
-    mEye += XMMatrixRotationRollPitchYawFromVector(vQuat) * walk_direction * 4.0f * ExclusionY;
-    // ■視点計算
-    XMMATRIX direction = XMMatrixRotationRollPitchYawFromVector(vQuat) * g_vForward;
-    mAt = mEye + direction * 10.0f;
-    // ------------------------------
 
+    /*
+    // ■回転計算
+    // マウスの移動量取得
+    double deltaX = WINDOW_WIDTH / 2 - Mouse::Pos().x;
+    double deltaY = WINDOW_HEIGHT / 2 - Mouse::Pos().y;
+    // deltaXYの大きさを調整
+    g_angleHorizon += deltaX * 0.5;
+    g_angleVertical += deltaY * 0.5;
+    // カメラアングルが90度を超えないよう制御
+    if (player.angleVertical > 90) player.angleVertical = 90;
+    if (player.angleVertical < -90) player.angleVertical = -90;
+    // カーソルの位置を中心に戻す
+    Window::SetCursorPos(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+    */
+
+    // クォータニオンを計算
+    vQuat = XMQuaternionRotationRollPitchYaw(0.0f, Radians(45.0f), 1.0f);
+    // ■座標計算
+    XMVECTOR ExclusionY = XMVectorSet(1.0f, 0.0f, 1.0f, 1.0f);
+    vEye += vQuat * walk_direction * 4.0f * ExclusionY;
+    // ■視点計算
+    XMVECTOR direction = vQuat * g_vForward;
+    vAt = vEye + direction * 10.0f;
+    // ------------------------------
+    
     // 第2キューブ : 第1キューブの周りを公転
     XMMATRIX mSpin = XMMatrixRotationZ( -t * 10.0f);
     XMMATRIX mOrbit = XMMatrixRotationY(t * 1.0f);
@@ -704,10 +717,7 @@ void Render()
     mCamera = mCameraTranslate * mCameraOrbit;
 
     // ビュー行列を計算
-    XMVECTOR Eye = XMVector2Transform(vEye, mEye);
-    XMVECTOR At = XMVector2Transform(vAt, mAt);
-    //XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-    g_View = XMMatrixLookAtLH(Eye, At, vUp);
+    g_View = XMMatrixLookAtLH(vEye, vAt, vUp);
 
     //
     // Clear the back buffer
